@@ -12,24 +12,4 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// +build linux
-// +build !amd64,!arm,!386
-
-package rawfile
-
-import (
-	"syscall"
-	"unsafe"
-)
-
-func blockingPoll(fds *pollEvent, nfds int, timeout int64) (int, syscall.Errno) {
-	var ts *syscall.Timespec = nil
-	if timeout >= 0 {
-		ts = &syscall.Timespec{
-			Sec:  timeout / 1000,
-			Nsec: (timeout % 1000) * 1000000,
-		}
-	}
-	n, _, e := syscall.Syscall6(syscall.SYS_PPOLL, uintptr(unsafe.Pointer(fds)), uintptr(nfds), uintptr(unsafe.Pointer(ts)), 0, 0, 0)
-	return int(n), e
-}
+// Empty assembly file so empty func definitions work.

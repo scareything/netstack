@@ -36,6 +36,10 @@ const (
 	// nDupAckThreshold is the number of duplicate ACK's required
 	// before fast-retransmit is entered.
 	nDupAckThreshold = 3
+
+	// Used for setting sndSsthresh to max int value on current architecture
+	BitsPerWord = 32 << (^uint(0) >> 63) // either 32 or 64
+	MaxInt  = 1<<(BitsPerWord-1) - 1 // either 1<<31 - 1 or 1<<63 - 1
 )
 
 // congestionControl is an interface that must be implemented by any supported
@@ -174,7 +178,7 @@ func newSender(ep *endpoint, iss, irs seqnum.Value, sndWnd seqnum.Size, mss uint
 	s := &sender{
 		ep:               ep,
 		sndCwnd:          InitialCwnd,
-		sndSsthresh:      math.MaxInt64,
+		sndSsthresh:      MaxInt,
 		sndWnd:           sndWnd,
 		sndUna:           iss + 1,
 		sndNxt:           iss + 1,

@@ -78,13 +78,13 @@ func NonBlockingWrite2(fd int, b1, b2 []byte) *tcpip.Error {
 	iovec := [...]syscall.Iovec{
 		{
 			Base: &b1[0],
-			Len:  uint64(len(b1)),
 		},
 		{
 			Base: &b2[0],
-			Len:  uint64(len(b2)),
 		},
 	}
+	iovec[0].SetLen(len(b1))
+	iovec[1].SetLen(len(b2))
 
 	_, _, e := syscall.RawSyscall(syscall.SYS_WRITEV, uintptr(fd), uintptr(unsafe.Pointer(&iovec[0])), uintptr(len(iovec)))
 	if e != 0 {
