@@ -13,7 +13,7 @@
 // limitations under the License.
 
 // +build linux
-// +build !amd64,!arm,!386
+// +build arm 386
 
 package rawfile
 
@@ -26,8 +26,8 @@ func blockingPoll(fds *pollEvent, nfds int, timeout int64) (int, syscall.Errno) 
 	var ts *syscall.Timespec = nil
 	if timeout >= 0 {
 		ts = &syscall.Timespec{
-			Sec:  timeout / 1000,
-			Nsec: (timeout % 1000) * 1000000,
+			Sec:  int32(timeout) / 1000,
+			Nsec: (int32(timeout) % 1000) * 1000000,
 		}
 	}
 	n, _, e := syscall.Syscall6(syscall.SYS_PPOLL, uintptr(unsafe.Pointer(fds)), uintptr(nfds), uintptr(unsafe.Pointer(ts)), 0, 0, 0)

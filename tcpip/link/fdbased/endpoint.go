@@ -210,10 +210,8 @@ func (e *endpoint) allocateViews(bufConfig []int) {
 		}
 		b := buffer.NewView(bufConfig[i])
 		e.views[i] = b
-		e.iovecs[i] = syscall.Iovec{
-			Base: &b[0],
-			Len:  uint64(len(b)),
-		}
+		e.iovecs[i] = syscall.Iovec{ Base: &b[0] }
+		e.iovecs[i].SetLen(len(b))
 	}
 }
 
